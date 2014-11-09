@@ -8,15 +8,15 @@ $(EXE) : $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $(EXE)
 App.o : App.h UIElement.h App.cpp Input.h Text.h
 	$(CC) $(CFLAGS) App.cpp
-Button.o : Button.h Button.cpp UIElement.h
+Button.o : Button.h Button.cpp UIElement.h Defines.h
 	$(CC) $(CFLAGS) Button.cpp
 main.o : App.h main.cpp
 	$(CC) $(CFLAGS) main.cpp
 UIElement.o : UIElement.h UIElement.cpp
 	$(CC) $(CFLAGS) UIElement.cpp
-Text.o : Text.h Text.cpp UIElement.h
+Text.o : Text.h Text.cpp UIElement.h Defines.h
 	$(CC) $(CFLAGS) Text.cpp
-Input.o : Input.h UIElement.h Input.cpp
+Input.o : Input.h UIElement.h Input.cpp Defines.h
 	$(CC) $(CFLAGS) Input.cpp
 clean:
 	rm *.o

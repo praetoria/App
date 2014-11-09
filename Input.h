@@ -1,6 +1,7 @@
 #ifndef INPUTH
 #define INPUTH
 #include "UIElement.h"
+#include "Defines.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <functional>
@@ -9,7 +10,7 @@
 class Input : public UIElement
 {
 public:
-	Input(SDL_Surface* screen, int size = 25);
+	Input(SDL_Surface* screen, int size = DEFAULT_TEXT_SIZE);
 	void registerOnClickHandler(std::function<void()> handler) {}
 	bool handleInput(SDL_Event event);
 	void onClick(SDL_Event event) override;

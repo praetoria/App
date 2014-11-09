@@ -1,0 +1,6 @@
+#ifndef DEFAULT_TEXT_SIZE
+#define DEFAULT_TEXT_SIZE 25
+#endif
+#ifndef DEFAULT_BUTTON_SIZE
+#define DEFAULT_BUTTON_SIZE 30
+#endif
