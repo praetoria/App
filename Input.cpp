@@ -4,11 +4,11 @@
 #include <functional>
 #include <string>
 
-Input::Input(SDL_Surface* screen) : UIElement(screen), mFocus(false)
+Input::Input(SDL_Surface* screen, int size) : UIElement(screen), mFocus(false)
 {
-	mFont = TTF_OpenFont("C:\\Windows\\fonts\\Arial.ttf",30);
+	mFont = TTF_OpenFont("C:\\Windows\\fonts\\Arial.ttf",size);
 	if (mFont == nullptr) {	
-		mFont = TTF_OpenFont("/usr/share/fonts/TTF/DejaVuSans.ttf",30);
+		mFont = TTF_OpenFont("/usr/share/fonts/TTF/DejaVuSans.ttf",size);
 	}
 	mColor = {0xF0,0xF0,0xF0};
 	mText = " ";

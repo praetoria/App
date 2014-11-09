@@ -9,7 +9,7 @@
 class Input : public UIElement
 {
 public:
-	Input(SDL_Surface* screen);
+	Input(SDL_Surface* screen, int size = 25);
 	void registerOnClickHandler(std::function<void()> handler) {}
 	bool handleInput(SDL_Event event);
 	void onClick(SDL_Event event) override;
