@@ -3,11 +3,11 @@
 #include <SDL_ttf.h>
 #include <string>
 
-Button::Button(SDL_Surface* screen, std::string text) : UIElement(screen)
+Button::Button(SDL_Surface* screen, std::string text, int size) : UIElement(screen)
 {
-	TTF_Font* font = TTF_OpenFont("C:\\Windows\\fonts\\Arial.ttf",40);
+	TTF_Font* font = TTF_OpenFont("C:\\Windows\\fonts\\Arial.ttf",size);
 	if (font == nullptr) {	
-		font = TTF_OpenFont("/usr/share/fonts/TTF/DejaVuSans.ttf",40);
+		font = TTF_OpenFont("/usr/share/fonts/TTF/DejaVuSans.ttf",size);
 	}
 	// throw exception if font == nullptr
 

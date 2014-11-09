@@ -8,7 +8,7 @@
 class Button : public UIElement
 {
 public:
-	Button(SDL_Surface* screen, std::string text);
+	Button(SDL_Surface* screen, std::string text, int size = 35);
 	~Button();
 };
 #endif
