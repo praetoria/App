@@ -23,8 +23,8 @@ private:
 	bool mRedraw;
 	void calculateKey(Text* output, Input *input);
 	SDL_Window* mWindow;
-	SDL_Surface* mScreen;
-	SDL_Surface* mBackground;
+	SDL_Renderer* mRenderer;
+	SDL_Texture* mBackground;
 	std::list<UIElement*> mElements;
 	std::list<Input*> mInputElements;
 };

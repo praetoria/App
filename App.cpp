@@ -48,31 +48,26 @@ void App::init()
 			return;
 		}
 		// Create primary window
-		mWindow = SDL_CreateWindow(mTitle.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_W, SCREEN_H, SDL_WINDOW_SHOWN);
+		mWindow = SDL_CreateWindow(mTitle.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREENW, SCREENH, SDL_WINDOW_SHOWN);
 		if (mWindow == nullptr) {
-			// print error
+			std::cout << "mWindow == nullptr: " << SDL_GetError() << std::endl;
 			SDL_Quit();
 			return;
 		}
-		// Get the screen from the window
-		mScreen = SDL_GetWindowSurface(mWindow);
-		if (mScreen == nullptr) {
-			// print error
-			SDL_DestroyWindow(mWindow);
-			SDL_Quit();
-			return;
-		}
-
-		// Load background
+		// Initialize the renderer
+		mRenderer = SDL_CreateRenderer(mWindow, 0, SDL_RENDERER_ACCELERATED);
+		SDL_RenderSetLogicalSize(mRenderer, SCREENW, SCREENH);
+		// Load background from memory
 		SDL_RWops *rw = SDL_RWFromMem(BG_START,BG_SIZE);
-		mBackground = SDL_LoadBMP_RW(rw, 1);
+		SDL_Surface* tempbg = SDL_LoadBMP_RW(rw, 1);
+		mBackground = SDL_CreateTextureFromSurface(mRenderer, tempbg);
+		SDL_FreeSurface(tempbg);
 		if (mBackground == nullptr) {
 			std::cout << SDL_GetError() << std::endl;
 			SDL_DestroyWindow(mWindow);
 			SDL_Quit();
 			return;
 		}
-		// Blit it on the screen
 		
 		createElements();
 
@@ -83,30 +78,30 @@ void App::init()
 void App::createElements()
 {
 	// Exit button
-	Button* exit = new Button(mScreen,std::string("Exit"));
+	Button* exit = new Button(std::string("Exit"));
 	exit->registerOnClickHandler([this](){ this->quit(); });
 	exit->setPosition(POS_BOT | POS_RIGHT,120,30);
 	mElements.push_back(exit);
 	// Welcome text
-	Text* welcome = new Text(mScreen,std::string("Challenge 1 Key Generator"), 30);
+	Text* welcome = new Text(std::string("Challenge 1 Key Generator"), 30);
 	welcome->setPosition(POS_TOP, 0,50);
 	mElements.push_back(welcome);
 	// Output text
-	Text* output = new Text(mScreen, std::string("Your key is: "),25);
+	Text* output = new Text(std::string("Your key is: "),25);
 	output->setPosition(POS_LEFT);
 	mElements.push_back(output);
 	// Generate input
-	Input* input = new Input(mScreen);
+	Input* input = new Input();
 	input->setPosition(POS_TOP | POS_LEFT,0,100);
 	mInputElements.push_back(input);
 	// "Generate" button
-	Button* generate = new Button(mScreen, std::string("Generate"));
+	Button* generate = new Button(std::string("Generate"));
 	generate->registerOnClickHandler([this, output, input]{this->calculateKey(output,input);});
 	generate->setPosition(POS_BOT,-50,30);
 	mElements.push_back(generate);
 	// copy to clipboard button
-	Button* clipcopy = new Button(mScreen, std::string("Copy"));
-	clipcopy->registerOnClickHandler([output]{ SDL_SetClipboardText(output->getText().c_str() + 13); });
+	Button* clipcopy = new Button(std::string("Copy"));
+	clipcopy->registerOnClickHandler([output]{ SDL_SetClipboardText(output->getText().c_str()); });
 	clipcopy->setPosition(POS_LEFT | POS_BOT, 15, 30);
 	mElements.push_back(clipcopy);
 	
@@ -116,7 +111,7 @@ void App::createElements()
 void App::run()
 {
 	
-	SDL_Rect stretchRect = {0,0,mScreen->w,mScreen->h};
+	SDL_Rect backgroundPos = {0,0,SCREENW,SCREENH};
 	// Capture events here
 	SDL_Event event;
 	mRunning = true;
@@ -137,10 +132,11 @@ void App::run()
 			}
 		}
 		if (mRedraw) {
-			SDL_BlitScaled(mBackground,nullptr,mScreen,&stretchRect);
-			for (auto b : mElements) b->draw();
-			for (auto i : mInputElements) i->draw();
-			SDL_UpdateWindowSurface(mWindow);
+			SDL_RenderClear(mRenderer);
+			SDL_RenderCopy(mRenderer, mBackground, nullptr, &backgroundPos); 
+			for (auto b : mElements) b->draw(mRenderer);
+			for (auto i : mInputElements) i->draw(mRenderer);
+			SDL_RenderPresent(mRenderer);
 			mRedraw = false;
 		}
 		SDL_Delay(50);
@@ -156,8 +152,7 @@ App::~App() {
 	// free memory of buttons
 	for (auto b : mElements) free(b);
 	for (auto i : mInputElements) free(i);
-	// Free surfaces
-	SDL_FreeSurface(mBackground);
+	// Destroy window
 	SDL_DestroyWindow(mWindow);
 	// Quit SDL
 	SDL_Quit();

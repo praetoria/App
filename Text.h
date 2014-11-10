@@ -10,15 +10,16 @@ class Text : public UIElement
 {
 public:
 	Text() = delete;
-	Text(SDL_Surface* screen, std::string text, int size = DEFAULT_TEXT_SIZE);
+	Text(std::string text, int size = DEFAULT_TEXT_SIZE);
 	void setText(std::string text);
 	std::string getText() { return mText; }
-	void draw() override;
+	void draw(SDL_Renderer* renderer) override;
 	~Text();
 private:
 	std::string mText;
 	TTF_Font *mFont;
 	SDL_Color mColor;
+	bool mRedraw;
 	int size;
 };
 #endif

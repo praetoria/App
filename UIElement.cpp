@@ -1,26 +1,26 @@
 #include "UIElement.h"
 #include "PosEnum.h"
+#include "Defines.h"
 #include <SDL.h>
 
-UIElement::UIElement(SDL_Surface* screen) : mScreen(screen)
+UIElement::UIElement()
 {
+	// set width and height
 }
 
 void UIElement::setPosition(uint8_t flags, int x_offset, int y_offset) {
-	if (mScreen != nullptr) {
-		mRect.x = mScreen->w/2 - mRect.w/2 + x_offset;
-		mRect.y = mScreen->h/2 - mRect.h/2 + y_offset;
+	mRect.x = SCREENW/2 - mRect.w/2 + x_offset;
+	mRect.y = SCREENH/2 - mRect.h/2 + y_offset;
 
-		if (flags & POS_TOP) {
-			mRect.y = y_offset;
-		} else if (flags & POS_BOT) {
-			mRect.y = mScreen->h - mRect.h - y_offset;
-		}
-		if (flags & POS_LEFT) {
-			mRect.x = x_offset;
-		} else if (flags & POS_RIGHT) {
-			mRect.x = mScreen->w - mRect.w - x_offset;
-		}
+	if (flags & POS_TOP) {
+		mRect.y = y_offset;
+	} else if (flags & POS_BOT) {
+		mRect.y = SCREENH - mRect.h - y_offset;
+	}
+	if (flags & POS_LEFT) {
+		mRect.x = x_offset;
+	} else if (flags & POS_RIGHT) {
+		mRect.x = SCREENW - mRect.w - x_offset;
 	}
 }
 
@@ -37,8 +37,13 @@ void UIElement::onClick(SDL_Event event)
 	}
 }
 
-void UIElement::draw()
+void UIElement::draw(SDL_Renderer* renderer)
 {	
-	if (mScreen != nullptr && mSurface != nullptr)
-		SDL_BlitSurface(mSurface, nullptr, mScreen, &mRect);
+	if (renderer != nullptr) {
+		if (mTexture == nullptr) {
+			mTexture = SDL_CreateTextureFromSurface(renderer, mTmpSurf);
+			SDL_FreeSurface(mTmpSurf);
+		}
+		SDL_RenderCopy(renderer, mTexture, nullptr, &mRect);
+	}
 }

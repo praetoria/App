@@ -10,14 +10,17 @@
 class Input : public UIElement
 {
 public:
-	Input(SDL_Surface* screen, int size = DEFAULT_TEXT_SIZE);
+	Input(int size = DEFAULT_TEXT_SIZE, int maxsize = DEFAULT_INPUT_WIDTH);
 	void registerOnClickHandler(std::function<void()> handler) {}
 	bool handleInput(SDL_Event event);
 	void onClick(SDL_Event event) override;
-	void draw() override;
+	void draw(SDL_Renderer* renderer) override;
 	std::string getText() { return mText; }
 private:
 	bool mFocus;
+	bool mRedraw;
+	int mMaxChars;
+	SDL_Rect mTextRect;
 	TTF_Font* mFont;
 	SDL_Color mColor;
 	std::string mText;
