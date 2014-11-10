@@ -2,13 +2,14 @@
 #include "Text.h"
 #include "App.h"
 #include "PosEnum.h"
+#include "Defines.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <memory>
 #include <functional>
+#include <iostream>
 #include <string>
-#define SCREEN_W 640
-#define SCREEN_H 480
+
 
 void App::calculateKey(Text *output, Input *input)
 {
@@ -63,13 +64,14 @@ void App::init()
 		}
 
 		// Load background
-		mBackground = SDL_LoadBMP("bg.bmp");
+		SDL_RWops *rw = SDL_RWFromMem(BG_START,BG_SIZE);
+		mBackground = SDL_LoadBMP_RW(rw, 1);
 		if (mBackground == nullptr) {
+			std::cout << SDL_GetError() << std::endl;
 			SDL_DestroyWindow(mWindow);
 			SDL_Quit();
 			return;
 		}
-		
 		// Blit it on the screen
 		
 		createElements();
