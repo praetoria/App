@@ -22,6 +22,7 @@ void UIElement::setPosition(uint8_t flags, int x_offset, int y_offset) {
 	} else if (flags & POS_RIGHT) {
 		mRect.x = SCREENW - mRect.w - x_offset;
 	}
+	mTexture = nullptr;
 }
 
 void UIElement::onClick(SDL_Event event)

@@ -13,8 +13,8 @@ public:
 	Input(int size = DEFAULT_TEXT_SIZE, int maxsize = DEFAULT_INPUT_WIDTH);
 	void registerOnClickHandler(std::function<void()> handler) {}
 	bool handleInput(SDL_Event event);
-	void onClick(SDL_Event event) override;
-	void draw(SDL_Renderer* renderer) override;
+	void onClick(SDL_Event event);
+	void draw(SDL_Renderer* renderer);
 	std::string getText() { return mText; }
 private:
 	bool mFocus;

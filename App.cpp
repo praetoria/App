@@ -8,6 +8,7 @@
 #include <memory>
 #include <functional>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 
@@ -27,7 +28,9 @@ void App::calculateKey(Text *output, Input *input)
 		"cmp %%edi,%%esi;"\
 		"jle loop"\
 		: "=c" (out) : "S" (in), "D" (in_end) : "%eax","%ebx","%edx");
-	output->setText("Your key is: " + std::to_string(out));	
+	std::stringstream ss;
+	ss << out;
+	output->setText("Your key is: " + ss.str());	
 	mRedraw = true;
 }
 

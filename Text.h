@@ -13,7 +13,7 @@ public:
 	Text(std::string text, int size = DEFAULT_TEXT_SIZE);
 	void setText(std::string text);
 	std::string getText() { return mText; }
-	void draw(SDL_Renderer* renderer) override;
+	void draw(SDL_Renderer* renderer);
 	~Text();
 private:
 	std::string mText;

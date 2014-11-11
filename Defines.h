@@ -1,5 +1,8 @@
 #ifndef DEFINESH
 #define DEFINESH
+#ifdef _WIN32
+#define nullptr NULL
+#endif
 
 #define DEFAULT_TEXT_SIZE 25
 #define DEFAULT_BUTTON_SIZE 30

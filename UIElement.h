@@ -12,8 +12,8 @@ public:
 	virtual void registerOnClickHandler(std::function<void()> handler) { mHandler = handler; }
 	virtual void draw(SDL_Renderer* renderer);
 protected:
-	SDL_Texture* mTexture = nullptr;
-	SDL_Surface* mTmpSurf = nullptr;
+	SDL_Texture* mTexture;
+	SDL_Surface* mTmpSurf;
 	SDL_Rect mRect;
 private:
 	std::function<void()> mHandler;
