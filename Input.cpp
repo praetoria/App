@@ -21,6 +21,7 @@ Input::Input(int size, int maxchars) : mMaxChars(maxchars),mRedraw(true), mFocus
 	mRect.w = temp->w;
 	mRect.h = temp->h;
 	SDL_FreeSurface(temp);
+	mText = "";
 }
 
 bool Input::handleInput(SDL_Event event)
@@ -30,13 +31,17 @@ bool Input::handleInput(SDL_Event event)
 		if (event.key.keysym.sym == SDLK_BACKSPACE && mText.length() > 0 ) {
 			mText.pop_back();
 			mRedraw = true;
+			mChangeHandler(mText);
 			return true;
 		} else if(event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
 			SDL_SetClipboardText( mText.c_str() );
 			return false;
 		} else if ( event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL ) {
 			mText += SDL_GetClipboardText();
+			if (mText.length() > mMaxChars)
+				mText.erase(mText.begin()+mMaxChars,mText.end());
 			mRedraw = true;
+			mChangeHandler(mText);
 			return true;
 		}
 	} else if (event.type == SDL_TEXTINPUT) {
@@ -45,12 +50,10 @@ bool Input::handleInput(SDL_Event event)
 			if (c == 'c' || c == 'C' || c == 'v' || c == 'V')
 				return false;
 		}
-		if (mText == " ")
-			mText = event.text.text;
-		else
-			mText += event.text.text;
+		mText += event.text.text;
 		if (mText.length() > mMaxChars)
 			mText.erase(mText.begin()+mMaxChars,mText.end());
+		mChangeHandler(mText);
 		mRedraw = true;
 		return true;
 	}
@@ -75,7 +78,7 @@ void Input::onClick(SDL_Event event)
 
 void Input::draw(SDL_Renderer* renderer) {
 	if (mRedraw || !mTexture) {
-		std::string text = mText;
+		std::string text(mText.c_str());
 		if (text.length() == 0) text = " ";
 		SDL_Surface* tmpSurf = TTF_RenderText_Blended(mFont, text.c_str(),mColor);
 		mTexture = SDL_CreateTextureFromSurface(renderer, tmpSurf);

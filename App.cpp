@@ -12,9 +12,9 @@
 #include <string>
 
 
-void App::calculateKey(Text *output, Input *input)
+void App::calculateKey(Text *output, std::string text)
 {
-	const char *in = input->getText().c_str();
+	const char *in = text.c_str();
 	const char *in_end = in + strlen(in) - 1;
 	unsigned int out = 0;
 	asm(	"xor %%ecx,%%ecx;"\
@@ -31,7 +31,6 @@ void App::calculateKey(Text *output, Input *input)
 	std::stringstream ss;
 	ss << out;
 	output->setText("Your key is: " + ss.str());	
-	mRedraw = true;
 }
 
 App::App(std::string title) : mRunning(false), mTitle(title)
@@ -83,28 +82,24 @@ void App::createElements()
 	// Exit button
 	Button* exit = new Button(std::string("Exit"));
 	exit->registerOnClickHandler([this](){ this->quit(); });
-	exit->setPosition(POS_BOT | POS_RIGHT,120,30);
+	exit->setPosition(POS_BOT | POS_RIGHT,15,30);
 	mElements.push_back(exit);
 	// Welcome text
-	Text* welcome = new Text(std::string("Challenge 1 Key Generator"), 30);
+	Text* welcome = new Text(std::string("Challenge 1"), 25);
 	welcome->setPosition(POS_TOP, 0,50);
 	mElements.push_back(welcome);
 	// Output text
 	Text* output = new Text(std::string("Your key is: "),25);
-	output->setPosition(POS_LEFT);
+	output->setPosition(POS_LEFT,0, 50);
 	mElements.push_back(output);
 	// Generate input
-	Input* input = new Input();
-	input->setPosition(POS_TOP | POS_LEFT,0,100);
+	Input* input = new Input(25,15);
+	input->setPosition(POS_LEFT,0,20);
+	input->registerOnChangeHandler([this, output](std::string text){this->calculateKey(output, text);});
 	mInputElements.push_back(input);
-	// "Generate" button
-	Button* generate = new Button(std::string("Generate"));
-	generate->registerOnClickHandler([this, output, input]{this->calculateKey(output,input);});
-	generate->setPosition(POS_BOT,-50,30);
-	mElements.push_back(generate);
 	// copy to clipboard button
 	Button* clipcopy = new Button(std::string("Copy"));
-	clipcopy->registerOnClickHandler([output]{ SDL_SetClipboardText(output->getText().c_str()); });
+	clipcopy->registerOnClickHandler([output]{ SDL_SetClipboardText(output->getText().c_str()+13); });
 	clipcopy->setPosition(POS_LEFT | POS_BOT, 15, 30);
 	mElements.push_back(clipcopy);
 	
@@ -118,14 +113,13 @@ void App::run()
 	// Capture events here
 	SDL_Event event;
 	mRunning = true;
-	mRedraw = true;
 	while (mRunning)
 	{
 		while (SDL_PollEvent(&event))
 		{
 			if (event.type == SDL_KEYDOWN || event.type == SDL_TEXTINPUT) {
 				for (auto i : mInputElements)
-				mRedraw = mRedraw || i->handleInput(event);
+					i->handleInput(event);
 			}
 			if (event.type == SDL_QUIT) mRunning = false;
 			if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
@@ -134,14 +128,11 @@ void App::run()
 				for (auto i : mInputElements) i->onClick(event);
 			}
 		}
-		if (mRedraw) {
-			SDL_RenderClear(mRenderer);
-			SDL_RenderCopy(mRenderer, mBackground, nullptr, &backgroundPos); 
-			for (auto b : mElements) b->draw(mRenderer);
-			for (auto i : mInputElements) i->draw(mRenderer);
-			SDL_RenderPresent(mRenderer);
-			mRedraw = false;
-		}
+		SDL_RenderClear(mRenderer);
+		SDL_RenderCopy(mRenderer, mBackground, nullptr, &backgroundPos); 
+		for (auto b : mElements) b->draw(mRenderer);
+		for (auto i : mInputElements) i->draw(mRenderer);
+		SDL_RenderPresent(mRenderer);
 		SDL_Delay(50);
 	}
 }

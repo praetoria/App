@@ -12,7 +12,7 @@ Button.o : Button.h Button.cpp UIElement.h Defines.h
 	$(CC) $(CFLAGS) Button.cpp
 main.o : App.h main.cpp
 	$(CC) $(CFLAGS) main.cpp
-UIElement.o : UIElement.h UIElement.cpp
+UIElement.o : UIElement.h UIElement.cpp Defines.h
 	$(CC) $(CFLAGS) UIElement.cpp
 Text.o : Text.h Text.cpp UIElement.h Defines.h
 	$(CC) $(CFLAGS) Text.cpp

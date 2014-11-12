@@ -20,8 +20,7 @@ private:
 	void init();
 	void createElements();
 	bool mRunning;
-	bool mRedraw;
-	void calculateKey(Text* output, Input *input);
+	void calculateKey(Text* output, std::string text);
 	SDL_Window* mWindow;
 	SDL_Renderer* mRenderer;
 	SDL_Texture* mBackground;

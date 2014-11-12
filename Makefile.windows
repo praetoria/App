@@ -1,6 +1,6 @@
 LDFLAGS = -Lsdl_win/SDL2-2.0.3/lib/x86/ -Lsdl_win/SDL2_ttf-2.0.12/i686-w64-mingw32/lib/ -lSDL2 -lSDL2_ttf
 CFLAGS = -Isdl_win/SDL2-2.0.3/include/ -Isdl_win/SDL2_ttf-2.0.12/i686-w64-mingw32/include/SDL2/ -c
-CC = mingw32-gcc -x c++ -std=c++11
+CC = /usr/local/cross-tools/i686-w64-mingw32/bin/g++ -std=c++11
 OBJECTS = main.o App.o UIElement.o background.o Text.o Button.o Input.o
 EXE = gen.exe
 
