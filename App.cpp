@@ -30,7 +30,7 @@ void App::calculateKey(Text *output, std::string text)
 		: "=c" (out) : "S" (in), "D" (in_end) : "%eax","%ebx","%edx");
 	std::stringstream ss;
 	ss << out;
-	output->setText("Your key is: " + ss.str());	
+	output->setText("Your number: " + ss.str());	
 }
 
 App::App(std::string title) : mRunning(false), mTitle(title)
@@ -85,11 +85,11 @@ void App::createElements()
 	exit->setPosition(POS_BOT | POS_RIGHT,15,30);
 	mElements.push_back(exit);
 	// Welcome text
-	Text* welcome = new Text(std::string("Challenge 1"), 25);
+	Text* welcome = new Text(std::string("A Random App"), 25);
 	welcome->setPosition(POS_TOP, 0,50);
 	mElements.push_back(welcome);
 	// Output text
-	Text* output = new Text(std::string("Your key is: "),25);
+	Text* output = new Text(std::string("Your number: "),25);
 	output->setPosition(POS_LEFT,0, 50);
 	mElements.push_back(output);
 	// Generate input

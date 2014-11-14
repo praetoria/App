@@ -41,7 +41,7 @@ void UIElement::onClick(SDL_Event event)
 void UIElement::draw(SDL_Renderer* renderer)
 {	
 	if (renderer != nullptr) {
-		if (mTexture == nullptr) {
+		if (mTexture == nullptr && mTmpSurf != nullptr) {
 			mTexture = SDL_CreateTextureFromSurface(renderer, mTmpSurf);
 			SDL_FreeSurface(mTmpSurf);
 		}
